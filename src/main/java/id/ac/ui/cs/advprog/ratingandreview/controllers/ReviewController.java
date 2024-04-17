@@ -2,10 +2,13 @@ package id.ac.ui.cs.advprog.ratingandreview.controllers;
 
 import id.ac.ui.cs.advprog.ratingandreview.models.Review;
 import id.ac.ui.cs.advprog.ratingandreview.services.ReviewService;
+import id.ac.ui.cs.advprog.ratingandreview.dto.ReviewFormData;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -18,13 +21,19 @@ public class ReviewController {
 
     @GetMapping
     public String showForm(Model model) {
-        model.addAttribute("review", new Review());
+        model.addAttribute("reviewFormData", new ReviewFormData());
         return "review";
     }
 
     @PostMapping
-    public String submitReview(Review review) {
+    public String submitReview(@ModelAttribute ReviewFormData formData) {
+        Review review = new Review.Builder()
+                .content(formData.getContent())
+                .rating(formData.getRating())
+                .user(formData.getUser())
+                .build();
         reviewService.saveReview(review);
         return "redirect:/reviews";
     }
 }
+
