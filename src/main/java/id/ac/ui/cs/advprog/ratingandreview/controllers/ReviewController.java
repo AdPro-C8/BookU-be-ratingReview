@@ -24,16 +24,5 @@ public class ReviewController {
         model.addAttribute("reviewFormData", new ReviewFormData());
         return "review";
     }
-
-    @PostMapping
-    public String submitReview(@ModelAttribute ReviewFormData formData) {
-        Review review = new Review.Builder()
-                .content(formData.getContent())
-                .rating(formData.getRating())
-                .user(formData.getUser())
-                .build();
-        reviewService.saveReview(review);
-        return "redirect:/reviews";
-    }
 }
 
