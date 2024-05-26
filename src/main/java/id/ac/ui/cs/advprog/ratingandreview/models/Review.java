@@ -1,9 +1,14 @@
     package id.ac.ui.cs.advprog.ratingandreview.models;
 
-    import jakarta.persistence.*;
+    import java.util.UUID;
+
+import jakarta.persistence.*;
 
     @Entity
-    @Table(name = "reviews")
+    @Table(
+        name = "reviews",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user", "book_id"})
+    )
     public class Review {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +23,9 @@
         @Column(name = "username")  // Changed from 'user' to 'username'
         private String user;
 
+        @Column(name = "book_id", nullable = false)
+        private UUID bookId;
+
         protected Review() {
             // JPA requires a no-arg constructor
         }
@@ -27,6 +35,7 @@
             this.content = builder.content;
             this.rating = builder.rating;
             this.user = builder.user;
+            this.bookId = builder.bookId;
         }
 
         public static class Builder {
@@ -34,6 +43,7 @@
             private String content;
             private int rating;
             private String user;
+            private UUID bookId;
 
             public Builder() {
             }
@@ -55,6 +65,11 @@
 
             public Builder user(String user) {
                 this.user = user;
+                return this;
+            }
+
+            public Builder bookId(UUID bookId) {
+                this.bookId = bookId;
                 return this;
             }
 
@@ -82,5 +97,13 @@
 
         public void setUser(String user) {
             this.user = user;
+        }
+
+        public UUID getBookId() {
+            return bookId;
+        }
+
+        public void setBookId(UUID bookId) {
+            this.bookId = bookId;
         }
     }
